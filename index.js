@@ -9,7 +9,7 @@ var config = {};
 // someone has joined the room
 socket.on('new.peer', function(sockets) {
   var length = sockets.length;
-  var initiatorId = sockets[length - 1];
+  var initiatorId = sockets[length - 1].id;
   if (length > 1) {
     // this client will act as initiator for the new connections 
     if (initiatorId === socket.id) {
@@ -42,10 +42,10 @@ socket.emit('join', room);
 // set up connection as initiator
 function startConnection(sockets, number) {
   var peer = new SimplePeer({ initiator: true, trickle: false });
-  peerConnections[sockets[number]] = { peer: peer, connected: false, by: socket.id, to: sockets[number] }; 
+  peerConnections[sockets[number].id] = { peer: peer, connected: false, by: socket.id, to: sockets[number].id }; 
 
   peer.on('signal', function(data) {
-    socket.emit('offer', { offer: data, by: socket.id, to: sockets[number] });
+    socket.emit('offer', { offer: data, by: socket.id, to: sockets[number].id });
   });
 
   peer.on('connect', function() {
