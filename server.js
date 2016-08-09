@@ -16,7 +16,8 @@ io.on('connection', function(socket) {
     } else {
       socket.join(room);
       rooms[room] = rooms[room] || [];
-      rooms[room].push(socket.id.slice(2));
+      socket.id = rooms[room].length + 1;
+      rooms[room].push(socket.id);
       io.in(room).emit('new.peer', rooms[room]);
     }
   });
